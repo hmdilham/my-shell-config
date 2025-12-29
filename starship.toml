@@ -1,0 +1,334 @@
+# Starship Configuration - Full P10k Feature Parity
+# Comprehensive config matching Powerlevel10k capabilities
+
+# Custom format with all modules
+format = """
+[░▒▓](#a3aed2)\
+[  ](bg:#a3aed2 fg:#090c0c)\
+[](bg:#769ff0 fg:#a3aed2)\
+$directory\
+[](fg:#769ff0 bg:#394260)\
+$git_branch\
+$git_status\
+$git_commit\
+$git_state\
+[](fg:#394260 bg:#212736)\
+$kubernetes\
+$docker_context\
+[](fg:#212736 bg:#1d2230)\
+$nodejs\
+$python\
+$conda\
+$rust\
+$golang\
+$php\
+$java\
+$ruby\
+[](fg:#1d2230 bg:#16161e)\
+$gcloud\
+$aws\
+[](fg:#16161e bg:#0d0d0d)\
+$status\
+$cmd_duration\
+$jobs\
+[](fg:#0d0d0d)\
+$line_break\
+$character"""
+
+# Continuation prompt
+continuation_prompt = '▶▶ '
+
+# ===== CHARACTER & PROMPT =====
+[character]
+success_symbol = "[└─>](bold green)"
+error_symbol = "[└─>](bold red)"
+vimcmd_symbol = "[└─<](bold green)"
+
+# ===== DIRECTORY =====
+[directory]
+style = "fg:#e3e5e5 bg:#769ff0"
+format = "[ $path ]($style)[$read_only]($read_only_style)"
+truncation_length = 3
+truncation_symbol = "…/"
+home_symbol = " ~"
+read_only = "  "
+read_only_style = "fg:#ff5555 bg:#769ff0"
+truncate_to_repo = false
+
+[directory.substitutions]
+"Documents" = " "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+"Videos" = " "
+"Desktop" = "󰚝 "
+"Projects" = " "
+".config" = " "
+
+# ===== GIT CONFIGURATION =====
+[git_branch]
+symbol = " "
+style = "fg:#769ff0 bg:#394260"
+format = "[[ $symbol$branch ](fg:#769ff0 bg:#394260)]($style)"
+truncation_length = 20
+truncation_symbol = "…"
+
+[git_status]
+style = "fg:#769ff0 bg:#394260"
+format = "[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)"
+conflicted = "⚔️ "
+ahead = "⇡${count} "
+behind = "⇣${count} "
+diverged = "⇕⇡${ahead_count}⇣${behind_count} "
+untracked = "?${count} "
+stashed = "📦${count} "
+modified = "!${count} "
+staged = "+${count} "
+renamed = "»${count} "
+deleted = "✘${count} "
+
+[git_commit]
+style = "fg:#769ff0 bg:#394260"
+format = "[[ $hash$tag ](fg:#769ff0 bg:#394260)]($style)"
+commit_hash_length = 7
+tag_symbol = " 🏷️ "
+only_detached = true
+
+[git_state]
+style = "fg:#ff5555 bg:#394260"
+format = "[[ $state($progress_current/$progress_total) ](fg:#ff5555 bg:#394260)]($style)"
+rebase = "REBASING"
+merge = "MERGING"
+revert = "REVERTING"
+cherry_pick = "CHERRY-PICKING"
+bisect = "BISECTING"
+am = "APPLYING-MAILBOX"
+am_or_rebase = "REBASE/APPLY"
+
+# ===== KUBERNETES =====
+[kubernetes]
+symbol = "⎈ "
+style = "fg:#326CE5 bg:#212736"
+format = '[[ $symbol$context( \($namespace\)) ](fg:#326CE5 bg:#212736)]($style)'
+disabled = false
+detect_files = ['k8s', 'Dockerfile', 'kubernetes']
+detect_folders = ['k8s', '.kube']
+detect_extensions = []
+
+[kubernetes.context_aliases]
+"gke_.*_(?P<cluster>[\\w-]+)" = "gke-$cluster"
+"arn:aws:eks:.*:cluster/(?P<cluster>[\\w-]+)" = "eks-$cluster"
+
+# ===== DOCKER =====
+[docker_context]
+symbol = " "
+style = "fg:#0db7ed bg:#212736"
+format = '[[ $symbol$context ](fg:#0db7ed bg:#212736)]($style)'
+only_with_files = true
+detect_files = ['docker-compose.yml', 'docker-compose.yaml', 'Dockerfile']
+detect_folders = []
+detect_extensions = []
+
+# ===== PROGRAMMING LANGUAGES =====
+[nodejs]
+symbol = " "
+style = "fg:#3C873A bg:#1d2230"
+format = '[[ $symbol($version) ](fg:#3C873A bg:#1d2230)]($style)'
+detect_files = ['package.json', '.node-version', '.nvmrc']
+detect_folders = ['node_modules']
+detect_extensions = ['js', 'mjs', 'cjs', 'ts']
+
+[python]
+symbol = " "
+style = "fg:#FFD43B bg:#1d2230"
+format = '[[ $symbol$virtualenv($version) ](fg:#FFD43B bg:#1d2230)]($style)'
+detect_files = ['.python-version', 'Pipfile', '__pycache__', 'pyproject.toml', 'requirements.txt', 'setup.py', 'tox.ini']
+detect_folders = []
+detect_extensions = ['py']
+
+[conda]
+symbol = " "
+style = "fg:#44A833 bg:#1d2230"
+format = '[[ $symbol$environment ](fg:#44A833 bg:#1d2230)]($style)'
+ignore_base = false
+
+[rust]
+symbol = " "
+style = "fg:#CE422B bg:#1d2230"
+format = '[[ $symbol($version) ](fg:#CE422B bg:#1d2230)]($style)'
+detect_files = ['Cargo.toml']
+detect_folders = []
+detect_extensions = ['rs']
+
+[golang]
+symbol = " "
+style = "fg:#00ADD8 bg:#1d2230"
+format = '[[ $symbol($version) ](fg:#00ADD8 bg:#1d2230)]($style)'
+detect_files = ['go.mod', 'go.sum', 'go.work']
+detect_folders = []
+detect_extensions = ['go']
+
+[php]
+symbol = " "
+style = "fg:#777BB4 bg:#1d2230"
+format = '[[ $symbol($version) ](fg:#777BB4 bg:#1d2230)]($style)'
+detect_files = ['composer.json', '.php-version']
+detect_folders = []
+detect_extensions = ['php']
+
+[java]
+symbol = " "
+style = "fg:#007396 bg:#1d2230"
+format = '[[ $symbol($version) ](fg:#007396 bg:#1d2230)]($style)'
+detect_files = ['pom.xml', 'build.gradle.kts', 'build.sbt', '.java-version']
+detect_folders = []
+detect_extensions = ['java', 'class', 'jar']
+
+[ruby]
+symbol = " "
+style = "fg:#CC342D bg:#1d2230"
+format = '[[ $symbol($version) ](fg:#CC342D bg:#1d2230)]($style)'
+detect_files = ['Gemfile', '.ruby-version']
+detect_folders = []
+detect_extensions = ['rb']
+
+# ===== CLOUD & INFRASTRUCTURE =====
+[gcloud]
+symbol = "☁️ "
+style = "fg:#4285F4 bg:#16161e"
+format = '[[ $symbol$account(@$domain)(\($project\)) ](fg:#4285F4 bg:#16161e)]($style)'
+
+[gcloud.project_aliases]
+"funding-production" = "prod"
+"funding-staging" = "staging"
+"funding-development" = "dev"
+
+[aws]
+symbol = "  "
+style = "fg:#FF9900 bg:#16161e"
+format = '[[ $symbol($profile)(\($region\)) ](fg:#FF9900 bg:#16161e)]($style)'
+
+[terraform]
+symbol = "💠 "
+style = "fg:#7B42BC bg:#16161e"
+format = '[[ $symbol$workspace ](fg:#7B42BC bg:#16161e)]($style)'
+detect_files = ['.terraform', 'terraform.tfstate']
+detect_folders = ['.terraform']
+
+# ===== COMMAND STATUS & EXECUTION =====
+[status]
+style = "fg:#ff5555 bg:#0d0d0d"
+symbol = "✘ "
+success_symbol = ""
+format = '[[ $symbol$status( $signal_name)( $common_meaning) ](fg:#ff5555 bg:#0d0d0d)]($style)'
+map_symbol = true
+disabled = false
+pipestatus = true
+pipestatus_separator = "|"
+pipestatus_format = '[[ $symbol$status( $signal_name)( $common_meaning) ](fg:#ff5555 bg:#0d0d0d)]($style)'
+
+[cmd_duration]
+min_time = 2_000
+style = "fg:#ffff00 bg:#0d0d0d"
+format = '[[ ⏱️ $duration ](fg:#ffff00 bg:#0d0d0d)]($style)'
+show_milliseconds = false
+show_notifications = false
+
+[jobs]
+symbol = "✦"
+style = "fg:#50fa7b bg:#0d0d0d"
+format = '[[ $symbol$number ](fg:#50fa7b bg:#0d0d0d)]($style)'
+number_threshold = 1
+symbol_threshold = 1
+
+# ===== SYSTEM RESOURCES =====
+[battery]
+full_symbol = '🔋 '
+charging_symbol = '⚡ '
+discharging_symbol = '💀 '
+format = '[$symbol$percentage]($style) '
+
+[[battery.display]]
+threshold = 10
+style = 'bold red'
+
+[[battery.display]]
+threshold = 30
+style = 'bold yellow'
+
+[[battery.display]]
+threshold = 100
+style = 'bold green'
+
+[memory_usage]
+symbol = "󰍛 "
+disabled = false
+threshold = 75
+style = "fg:#ff79c6 bg:#0d0d0d"
+format = '[[ $symbol${ram_pct}(/${swap_pct}) ](fg:#ff79c6 bg:#0d0d0d)]($style)'
+
+# ===== TIME =====
+[time]
+disabled = false
+time_format = "%R"
+style = "fg:#a0a9cb bg:#0d0d0d"
+format = '[[ 🕐 $time ](fg:#a0a9cb bg:#0d0d0d)]($style)'
+
+# ===== PACKAGE MANAGERS =====
+[package]
+symbol = "📦 "
+style = "fg:#8be9fd bg:#1d2230"
+format = '[[ $symbol$version ](fg:#8be9fd bg:#1d2230)]($style)'
+disabled = false
+display_private = false
+
+# ===== LINE BREAK =====
+[line_break]
+disabled = false
+
+# ===== ENVIRONMENT VARIABLES =====
+[env_var.SHELL]
+variable = 'SHELL'
+default = 'unknown shell'
+format = '[$env_value]($style) '
+disabled = true
+
+# ===== OTHER TOOLS =====
+[helm]
+symbol = "⎈ "
+format = '[[ $symbol($version) ](fg:#0F1689 bg:#212736)]($style)'
+detect_files = ['helmfile.yaml', 'Chart.yaml']
+
+[vagrant]
+symbol = "⍱ "
+format = '[[ $symbol($version) ](fg:#1563FF bg:#16161e)]($style)'
+detect_files = ['Vagrantfile']
+
+# ===== SHELL INDICATORS =====
+[shlvl]
+disabled = false
+symbol = "↕️ "
+format = "[$symbol$shlvl]($style) "
+threshold = 2
+style = "bold yellow"
+
+[sudo]
+disabled = false
+symbol = "🧙 "
+format = "[$symbol]($style)"
+style = "bold blue"
+
+# ===== USERNAME & HOSTNAME =====
+[username]
+style_user = "fg:#bd93f9 bg:#a3aed2"
+style_root = "fg:#ff5555 bg:#a3aed2"
+format = '[[  $user ](fg:#bd93f9 bg:#a3aed2)]($style)'
+disabled = false
+show_always = false
+
+[hostname]
+ssh_only = true
+ssh_symbol = "🌐 "
+format = "[[ $ssh_symbol$hostname ](fg:#50fa7b bg:#a3aed2)]($style)"
+style = "fg:#50fa7b bg:#a3aed2"
+disabled = false
